@@ -1,3 +1,10 @@
+# Usage
+load the robot description, then load the streaming interface, then use rqt_controller_manager to start the controller of choice   
+```
+roslaunch dsr_ros_control load_robot.launch   
+roslaunch dsr_ros_control start_robot_interface_streaming.launch
+rosrun rqt_controller_manager rqt_controller_manager
+```
 # bryan has made some changes:
 - shebangin' on that python3 the way the ubuntu gods intended
 - fake roscontrol interface in radians

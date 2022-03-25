@@ -15,14 +15,16 @@
     </group>
     
 	<!-- load the doosan driver -->
+	<!-- TODO move to robot_config.yaml or something -->
+	<param name="rate" value="100" />
+	<param name="standby" value="5000" />
+	<param name="command" value="true" />
+	<param name="host" value="$(arg host)" />
+	<param name="port" value="$(arg port)"/>
+	<param name="mode" value="$(arg mode)" />
+	<param name="model" value="$(arg model)" />
+
     <node pkg="dsr_control" type="dsr_control_node" name="dsr_control_node" respawn="false" output="screen">
-		<param name="rate" value="100" />
-		<param name="standby" value="5000" />
-		<param name="command" value="true" />
-		<param name="host" value="$(arg host)" />
-		<param name="port" value="$(arg port)"/>
-		<param name="mode" value="$(arg mode)" />
-		<param name="model" value="$(arg model)" />
     </node>
 
     <!-- start the /joint_states streamer (joint_state_controller type)-->

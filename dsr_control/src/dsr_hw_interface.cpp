@@ -687,7 +687,7 @@ namespace dsr_control{
             arm_joint_names =
             boost::assign::list_of("joint1")("joint2")("joint3")("joint4")("joint5")("joint6")("robotiq_85_left_knuckle_joint").convert_to_container<ros::V_string>();
         }
-        else if(m_strRobotGripper == "none")
+        else
         {
             arm_joint_names =
             boost::assign::list_of("joint1")("joint2")("joint3")("joint4")("joint5")("joint6").convert_to_container<ros::V_string>();

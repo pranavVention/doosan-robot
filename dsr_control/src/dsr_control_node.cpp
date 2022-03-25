@@ -31,38 +31,29 @@ void SigHandler(int sig)
 int main(int argc, char** argv)
 {
     //----- init ROS ---------------------- 
-    ///ros::init(argc, argv, "dsr_control_node");
     ros::init(argc, argv, "dsr_control_node", ros::init_options::NoSigintHandler);
     ros::NodeHandle nh; // use proper namehandle for proper controller name resolution
-    ros::NodeHandle private_nh("~");
-    ///ros::NodeHandle nh("/dsr_control");
+
     // Override the default ros sigint handler.
     // This must be set after the first NodeHandle is created.
     signal(SIGINT, SigHandler);
 
     //----- get param ---------------------
     int rate;
-    private_nh.param<int>("rate", rate, 100);
+    nh.param<int>("rate", rate, 100);
     ROS_INFO("rate is %d\n", rate);
     ros::Rate r(rate);
 
     ///dsr_control::DRHWInterface arm(nh);
     DRHWInterface* pArm = NULL;
-    pArm = new DRHWInterface(private_nh);
+    pArm = new DRHWInterface(nh);
     if(!pArm->init() ){
         ROS_ERROR("[dsr_control] Error initializing robot");
         return -1;
     }
-    ///controller_manager::ControllerManager cm(&arm, nh);
-    // controller_manager::ControllerManager cm(pArm, private_nh);
     controller_manager::ControllerManager cm(pArm, nh);
     ros::AsyncSpinner spinner(1);
     spinner.start();
-
-//    int rate;
-//    private_nh.param<int>("rate", rate, 50);
-//    ROS_INFO("rate is %d\n", rate);
-//    ros::Rate r(rate);
 
     ros::Time last_time;
     ros::Time curr_time;
@@ -72,7 +63,6 @@ int main(int argc, char** argv)
     ROS_INFO("[dsr_control] controller_manager is updating!");
 
     while(ros::ok() && (false==g_nKill_dsr_control))
-    ///while(g_nKill_dsr_control==false)
     {
         try{
             ///ROS_INFO("[dsr_control] Running...(g_nKill_dsr_control=%d)",g_nKill_dsr_control);
@@ -81,7 +71,7 @@ int main(int argc, char** argv)
             if(pArm) pArm->read(elapsed);
             cm.update(ros::Time::now(), elapsed);
             if(pArm) pArm->write(elapsed);
-            r.sleep();	//(1000/rate)[sec], default: 10ms 
+            r.sleep();	//(1/rate)[sec], default: 10ms 
         }
         catch(std::runtime_error& ex)
         {
