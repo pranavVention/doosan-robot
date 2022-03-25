@@ -6,6 +6,8 @@
 	<arg name="port" default="12345"/>
 	<arg name="model" default="h2515"/>
 
+    <!-- load all controllers -->
+    <rosparam file="$(find dsr_ros_control)/config/controllers.yaml" command="load"/>
 
     <!-- load the doosan robot simulator when not talking to real hardware -->
     <group if="$(eval arg('mode') == 'virtual')">         	
@@ -23,9 +25,6 @@
 		<param name="model" value="$(arg model)" />
     </node>
 
-
-    <!-- load all controllers -->
-    <rosparam file="$(find dsr_ros_control)/config/controllers.yaml" command="load"/>
     <!-- start the /joint_states streamer (joint_state_controller type)-->
     <node name="controller_spawner_state" pkg="controller_manager" type="spawner" output="screen" args="dsr_joint_publisher">
 	</node>

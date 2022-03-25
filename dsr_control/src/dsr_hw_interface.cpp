@@ -978,8 +978,8 @@ namespace dsr_control{
 
         //open a conventional connection AND a realtime connection, so we get some niceties and the realtime control.
         //TODO: might drop the conventional connection after init is done, not sure.
-        if(Drfl.open_connection(host, nServerPort)&&Drfl.connect_rt_control(host))  //TODO: when mode virtual dont do rt connect somehow.
-        //if(Drfl.open_connection(host, nServerPort)) //dropped the udp port for testing, as the emulator doesnt emulate that part.
+        // if(Drfl.open_connection(host, nServerPort)&&Drfl.connect_rt_control(host))  //TODO: when mode virtual dont do rt connect somehow.
+        if(Drfl.open_connection(host, nServerPort)) //dropped the udp port for testing, as the emulator doesnt emulate that part.
         {
             //--- connect Emulator ? ------------------------------    
             if(host == "127.0.0.1") m_bIsEmulatorMode = true; 
@@ -1035,8 +1035,11 @@ namespace dsr_control{
             // }
 
             //--------- Bring up the realtime interface --------------
-            if(!private_nh_.getParam("dsr_joint_publisher/publish_rate", rate_))
-                ROS_ERROR("Joint state publisher has no rate defined!");
+            // if(!private_nh_.getParam("dsr_joint_publisher/publish_rate", rate_))
+            if(!private_nh_.getParam("rate", rate_)){
+                ROS_FATAL("no rate defined, terminating.");
+                return false;
+            }
             Drfl.set_rt_control_output("v1.0", 1/rate_, drops_);    //Drops isnt used yet.
 
             ROS_INFO("[INIT] RT UDP interface connected and initialized to a rate of %fHz and %d drops.", rate_, drops_);

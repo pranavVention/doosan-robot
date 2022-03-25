@@ -33,6 +33,7 @@ int main(int argc, char** argv)
     //----- init ROS ---------------------- 
     ///ros::init(argc, argv, "dsr_control_node");
     ros::init(argc, argv, "dsr_control_node", ros::init_options::NoSigintHandler);
+    ros::NodeHandle nh; // use proper namehandle for proper controller name resolution
     ros::NodeHandle private_nh("~");
     ///ros::NodeHandle nh("/dsr_control");
     // Override the default ros sigint handler.
@@ -48,13 +49,13 @@ int main(int argc, char** argv)
     ///dsr_control::DRHWInterface arm(nh);
     DRHWInterface* pArm = NULL;
     pArm = new DRHWInterface(private_nh);
-
     if(!pArm->init() ){
         ROS_ERROR("[dsr_control] Error initializing robot");
         return -1;
     }
     ///controller_manager::ControllerManager cm(&arm, nh);
-    controller_manager::ControllerManager cm(pArm, private_nh);
+    // controller_manager::ControllerManager cm(pArm, private_nh);
+    controller_manager::ControllerManager cm(pArm, nh);
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
