@@ -30,4 +30,9 @@
     <!-- start the /joint_states streamer (joint_state_controller type)-->
     <node name="controller_spawner_state" pkg="controller_manager" type="spawner" output="screen" args="dsr_joint_publisher">
 	</node>
+
+	<!-- Convert joint states to TF transforms for rviz, etc -->
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+		<remap from="/joint_states" to="dsr01$(arg model)/joint_states" />
+	</node>
 </launch>
