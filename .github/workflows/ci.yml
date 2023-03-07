@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ros-version: [melodic]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up ROS
+      uses: dtcooper/ros-setup@v1
+      with:
+        ros-version: ${{ matrix.ros-version }}
+        
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y python3-pip
+        
+    - name: Run unit tests
+      run: |
+        catkin build
